@@ -1,0 +1,334 @@
+
+<!--
+=========================================================
+* Paper Dashboard 2 - v2.0.1
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/paper-dashboard-2
+* Copyright 2020 Creative Tim (https://www.creative-tim.com)
+
+Coded by www.creative-tim.com
+
+ =========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8" />
+<link rel="apple-touch-icon" sizes="76x76" href="/static/core/paper-dashboard-master/assets/img/apple-icon.png">
+<link rel="icon" type="image/png" href="/media/uploads/bg.png">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<title>
+{{client}} | D'femiq
+</title>
+<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+<!--     Fonts and icons     -->
+<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
+<!-- CSS Files -->
+<link href="/static/core/paper-dashboard-master/assets/css/bootstrap.min.css" rel="stylesheet" />
+<link href="/static/core/paper-dashboard-master/assets/css/paper-dashboard.css?v=2.0.1" rel="stylesheet" />
+<!-- CSS Just for demo purpose, don't include it in your project -->
+<link href="/static/core/paper-dashboard-master/assets/demo/demo.css" rel="stylesheet" />
+<!-- Option 1: Include in HTML -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+	<style>
+	    #searchbar{
+	    }
+
+#list{
+}
+
+.products{
+}
+
+    /* Center the loader */
+    #loader {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 1;
+      width: 120px;
+      height: 120px;
+      margin: -76px 0 0 -76px;
+      border: 16px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 16px solid blue;
+      border-right: 16px solid green;
+      border-bottom: 16px solid red;
+      border-left: 16px solid pink;
+      -webkit-animation: spin 2s linear infinite;
+      animation: spin 2s linear infinite;
+    }
+
+    @-webkit-keyframes spin {
+      0% { -webkit-transform: rotate(0deg); }
+      100% { -webkit-transform: rotate(360deg); }
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Add animation to "page content" */
+    .animate-bottom {
+      position: relative;
+      -webkit-animation-name: animatebottom;
+      -webkit-animation-duration: 1s;
+      animation-name: animatebottom;
+      animation-duration: 1s
+    }
+
+    @-webkit-keyframes animatebottom {
+      from { bottom:-100px; opacity:0 }
+      to { bottom:0px; opacity:1 }
+    }
+
+    @keyframes animatebottom {
+      from{ bottom:-100px; opacity:0 }
+      to{ bottom:0; opacity:1 }
+    }
+
+    #myDiv {
+      display: none;
+      text-align: center;
+    }
+</style>
+</head>
+
+<body onload="myFunction()" style="margin:0;">
+  <div id="loader"></div>
+  <div style="display:none;" id="myDiv" class="animate-bottom">
+  <div class="wrapper ">
+    <div class="sidebar" data-color="white" data-active-color="danger">
+      <div class="logo">
+        {% if user.member.image %}
+        <a href="/media/{{user.member.image}}" class="simple-text logo-mini">
+          <div class="logo-image-small">
+            <img src="/media/{{user.member.image}}">
+        {% else %}
+        <a href="/static/core/paper-dashboard-master/assets/img/logo-small.png" class="simple-text logo-mini">
+          <div class="logo-image-small">
+            <img src="/static/core/paper-dashboard-master/assets/img/logo-small.png">
+        {% endif %}
+          </div>
+          <!-- <p>CT</p> -->
+        </a>
+        {% if user.member.image %}
+        <a href="/media/{{user.member.image}}" class="simple-text logo-normal">
+        {% else %}
+        <a href="/static/core/paper-dashboard-master/assets/img/logo-small.png" class="simple-text logo-normal">
+        {% endif %}
+          {{user.username}}
+          <!-- <div class="logo-image-big">
+            <img src="/static/core/paper-dashboard-master/assets/img/logo-big.png">
+          </div> -->
+        </a>
+      </div>
+      <div class="sidebar-wrapper">
+        <ul class="nav">
+          {% if client == 'dashboard' %}
+          <li class="active ">
+            <a href="#">
+          {% else %}
+          <li>
+            <a href="{% url 'dashboard' %}">
+          {% endif %}
+              <i class="nc-icon nc-bank"></i>
+              <p>Dashboard</p>
+            </a>
+          </li>
+          {% if client == 'products' %}
+          <li class="active ">
+            <a href="#">
+          {% else %}
+          <li>
+            <a href="{% url 'products' 1 %}">
+          {% endif %}
+          <i class="nc-icon nc-diamond"></i>
+              <p>Products</p>
+            </a>
+          </li>
+
+          {% if client == 'sales' %}
+          <li class="active ">
+            <a href="#">
+          {% else %}
+          <li>
+            <a href="{% url 'sales' 1 %}">
+          {% endif %}
+          <i class="nc-icon nc-diamond"></i>
+              <p>Sales</p>
+            </a>
+          </li>
+
+          {% if client == 'invoices' %}
+          <li class="active ">
+            <a href="#">
+          {% else %}
+          <li>
+            <a href="{% url 'invoices' 1 %}">
+          {% endif %}
+          <i class="nc-icon nc-diamond"></i>
+              <p>Invoices</p>
+            </a>
+          </li>
+
+          {% if client == 'debt_invoices' %}
+          <li class="active ">
+            <a href="#">
+          {% else %}
+          <li>
+            <a href="{% url 'debt_invoices' 1 %}">
+          {% endif %}
+          <i class="nc-icon nc-diamond"></i>
+              <p>Debt Invoices</p>
+            </a>
+          </li>
+
+          {% if client == 'bulk_sales' %}
+          <li class="active ">
+            <a href="#">
+          {% else %}
+          <li>
+            <a href="{% url 'bulk_sale' 1 %}">
+          {% endif %}
+          <i class="nc-icon nc-diamond"></i>
+              <p>Bulk Sales</p>
+            </a>
+          </li>
+
+          <li class="active-pro">
+            <a href="{% url 'logout' %}">
+              <i class="nc-icon nc-spaceship"></i>
+              <p>Logout</p>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="main-panel">
+      <!-- Navbar -->
+      <nav class="navbar navbar-expand-lg navbar-absolute fixed-top navbar-transparent">
+        <div class="container-fluid">
+          <div class="navbar-wrapper">
+            <div class="navbar-toggle">
+              <button type="button" class="navbar-toggler">
+                <span class="navbar-toggler-bar bar1"></span>
+                <span class="navbar-toggler-bar bar2"></span>
+                <span class="navbar-toggler-bar bar3"></span>
+              </button>
+            </div>
+            <a class="navbar-brand" href="javascript:;">{{client}}</a>
+          </div>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+          </button>
+          <div class="collapse navbar-collapse justify-content-end" id="navigation">
+            <form method="get">
+              {% csrf_token %}
+              <div class="input-group no-border">
+                {% if client == 'bulk_sales' %}
+	            <input class="form-control" id="searchbar" onkeyup="search_product()" type="text" name="search" placeholder="Search product..">
+                {% else %}
+                <input type="text" name="q" class="form-control" placeholder="Search...">
+                {% endif %}
+                <div class="input-group-append">
+                  <div class="input-group-text">
+                    <i class="nc-icon nc-zoom-split"></i>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </nav>
+      <!-- End Navbar -->
+    {% block content %}
+    {% endblock %}
+      <footer class="footer footer-black  footer-white ">
+        <div class="container-fluid">
+          <div class="row">
+            <nav class="footer-nav">
+              <ul>
+                <li><a href="https://wa.me/+2348136628035?text=urlencodedtext" target="_blank"><span class="fa fa-whatsapp"></span></a></li>
+                <li><a href="https://twitter.com/ayogbadebo85" target="_blank"><span class="fa fa-twitter"></span></a></li>
+              </ul>
+            </nav>
+            <div class="credits ml-auto">
+              <span class="copyright">
+                © <script>
+                  document.write(new Date().getFullYear())
+                </script>, made with <i class="fa fa-heart heart"></i> by OPHIDIAN
+              </span>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+  </div>
+  <!--   Core JS Files   -->
+  <script src="/static/core/paper-dashboard-master/assets/js/core/jquery.min.js"></script>
+  <script src="/static/core/paper-dashboard-master/assets/js/core/popper.min.js"></script>
+  <script src="/static/core/paper-dashboard-master/assets/js/core/bootstrap.min.js"></script>
+  <script src="/static/core/paper-dashboard-master/assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+  <!--  Google Maps Plugin    -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+  <!-- Chart JS -->
+  <script src="/static/core/paper-dashboard-master/assets/js/plugins/chartjs.min.js"></script>
+  <!--  Notifications Plugin    -->
+  <script src="/static/core/paper-dashboard-master/assets/js/plugins/bootstrap-notify.js"></script>
+  <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
+  <script src="/static/core/paper-dashboard-master/assets/js/paper-dashboard.min.js?v=2.0.1" type="text/javascript"></script><!-- Paper Dashboard DEMO methods, don't include it in your project! -->
+  <script src="/static/core/paper-dashboard-master/assets/demo/demo.js"></script>
+	<script>
+	    // JavaScript code
+function search_product() {
+	let input = document.getElementById('searchbar').value
+	input=input.toLowerCase();
+	let x = document.getElementsByClassName('products');
+
+	for (i = 0; i < x.length; i++) {
+		if (!x[i].innerHTML.toLowerCase().includes(input)) {
+			x[i].style.display="none";
+		}
+		else {
+			x[i].style.display="";
+		}
+	}
+}
+
+	</script>
+  <script>
+    $(document).ready(function() {
+      // Javascript method's body can be found in assets/assets-for-demo/js/demo.js
+      demo.initChartsPages();
+    });
+  </script>
+<script>
+var myVar;
+
+function myFunction() {
+  myVar = setTimeout(showPage, 3000);
+}
+
+function showPage() {
+  document.getElementById("loader").style.display = "none";
+  document.getElementById("myDiv").style.display = "block";
+}
+</script>
+<script>
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+</script>
+</body>
+
+</html>

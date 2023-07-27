@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block content %}
+      <div class="content">
+      <form method="post">
+        {% csrf_token %}
+         <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title"> {{client}}</h4>
+                <button type="submit" class="btn btn-primary">Submit selected sales</button>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead class=" text-primary">
+                      <th>
+                        SN
+                      </th>
+                      <th>
+                        Product
+                      </th>
+                      <th>
+                        Select
+                      </th>
+                      <th>
+                        Number
+                      </th>
+                    </thead>
+                    <tbody>
+                    {% for obj in object_list %}
+                      <tr class="products">
+                        <td>
+                          {{forloop.counter}}
+                        </td>
+                        <td>
+                          {{obj.name}}
+                        </td>
+                        <td>
+                          <input style="width:30px; height:30px;" class="form-control" type="checkbox" name="product_id" value="{{obj.id}}">
+                        </td>
+                        <td>
+                          <input class="form-control" type="number" name="number">
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                  <div style="display:none;">{{form}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      </div>
+{% endblock %}

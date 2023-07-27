@@ -1,0 +1,229 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block content %}
+      <div class="content">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addcourse">
+                  <i class="fa fa-plus fa-lg"></i> add Product
+                </button>
+                <div class="modal fade" id="addcourse" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Add Product</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <form class="text-center border border-light p-5" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <label>Name</label>
+                            <input type="text" name="name"  class="form-control mb-4">
+                            <label>Image</label>
+                            <input type="file" id="id_{{form.image.name}}" name="{{form.image.name}}"  class="form-control mb-4">
+                            <label>Price</label>
+                            <input type="number" name="price"  class="form-control mb-4">
+                            <button name="create" class="btn btn-warning btn-block my-4" type="submit">Submit</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <div class="card-header">
+                <h4 class="card-title"> {{client}}</h4>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead class=" text-primary">
+                      <th>
+                        SN
+                      </th>
+                      <th>
+                        Name
+                      </th>
+                      <th>
+                        Image
+                      </th>
+                      <th class="text-right">
+                        Price
+                      </th>
+                      <th>
+                        Stock
+                      </th>
+                      <th>
+                        Updated
+                      </th>
+
+                    </thead>
+                    <tbody>
+                    {% for obj in page.object_list %}
+                      <tr>
+                        <td>
+                          {{forloop.counter}}
+                        </td>
+                        <td>
+                          {{obj.0.name}}
+                        </td>
+                        <td>
+                          <a href="/media/{{obj.0.image}}"><img src="/media/{{obj.0.image}}" width="60px"></a>
+                        <button title="update product data" type="button" style="border-width:0px;" data-toggle="modal" data-target="#updateimage{{obj.0.id}}">
+                          <i class="fa fa-pencil fa-lg"></i>
+                        </button>
+                        <div class="modal fade" id="updateimage{{obj.0.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Update {{obj.0.name}} Image</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                    <form class="text-center border border-light p-5" method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <label>Image</label>
+                                    <input type="file" id="id_{{form.image.name}}" name="{{form.image.name}}"  class="form-control mb-4">
+                                    <div style="display:none;"><input type="number" name="product_id" class="form-control mb-4" value="{{obj.0.id}}"></div>
+                                    <button name="updateimage" class="btn btn-warning btn-block my-4" type="submit">Submit</button>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        </td>
+                        <td class="text-right">
+                          &#x20A6;{{obj.0.price|intcomma}}
+                        </td>
+                        <td>
+                          {{obj.1}}
+                        <button title="update product data" type="button" style="border-width:0px;" data-toggle="modal" data-target="#updatestock{{obj.0.id}}">
+                          <i class="fa fa-pencil fa-lg"></i>
+                        </button>
+                        <div class="modal fade" id="updatestock{{obj.0.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Update {{obj.0.name}} Stock</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                    <form class="text-center border border-light p-5" method="get">
+                                    {% csrf_token %}
+                                    <label>Stock</label>
+                                    <input type="number" name="stock"  class="form-control mb-4" value="{{obj.1}}">
+                                    <div style="display:none;"><input type="number" name="product_id" class="form-control mb-4" value="{{obj.0.id}}"></div>
+                                    <button name="updatestock" class="btn btn-warning btn-block my-4" type="submit">Submit</button>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        </td>
+                        <td>
+                          {{obj.0.date|naturaltime}}
+                        </td>
+
+                        <td>
+                        <button title="update product data" type="button" class="btn btn-warning" data-toggle="modal" data-target="#update{{obj.0.id}}">
+                          <i class="fa fa-pencil fa-lg"></i>
+                        </button>
+                        <div class="modal fade" id="update{{obj.0.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Update Product</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                    <form class="text-center border border-light p-5" method="get">
+                                    {% csrf_token %}
+                                    <label>Name</label>
+                                    <input type="text" name="name" class="form-control mb-4" value="{{obj.0.name}}">
+                                    <label>Price</label>
+                                    <input type="number" name="price" class="form-control mb-4" value="{{obj.0.price}}">
+                                    <div style="display:none;"><input type="number" name="product_id" class="form-control mb-4" value="{{obj.0.id}}"></div>
+                                    <button name="update" class="btn btn-warning btn-block my-4" type="submit">Submit</button>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <button title="delete product" type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete{{obj.0.id}}">
+                          <i class="fa fa-trash fa-lg"></i>
+                        </button>
+                        <div class="modal fade" id="delete{{obj.0.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Delete Product</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                    <form class="text-center border border-light p-5" method="get">
+                                    {% csrf_token %}
+                                    <h4>Are you sure you want to delete product {{obj.0.name}}</h4>
+                                    <div style="display:none;"><input type="number" name="product_id" class="form-control mb-4" value="{{obj.0.id}}"></div>
+                                    <button name="delete" class="btn btn-danger btn-block my-4" type="submit">Yes</button>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            <nav aria-label="Page navigation example">
+              <ul class="pagination justify-content-center">
+
+                {% if page.has_previous is True %}
+                <li class="page-item">
+                  <a class="page-link" href="{% url 'products' page.previous_page_number %}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Previous</span>
+                  </a>
+                </li>
+                {% endif %}
+
+                {% for number in page.paginator.page_range %}
+                  {% if number == page.number %}
+                    <li class="page-item active">
+                      <a class="page-link" href="#">{{number}} <span class="sr-only">(current)</span></a>
+                    </li>
+                  {% else %}
+                    <li class="page-item"><a class="page-link" href="{% url 'products' number %}">{{number}}</a></li>
+                  {% endif %}
+                {% endfor %}
+
+                {% if page.has_next is True %}
+                <li class="page-item">
+                  <a class="page-link" href="{% url 'products' page.next_page_number %}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Next</span>
+                  </a>
+                </li>
+                {% endif %}
+
+              </ul>
+            </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock %}

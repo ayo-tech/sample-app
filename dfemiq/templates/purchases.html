@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+{% block content %}
+      <div class="content">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addcourse">
+                  <i class="fa fa-plus fa-lg"></i> add Course
+                </button>
+                <div class="modal fade" id="addcourse" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Add Course</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                            <form class="text-center border border-light p-5" method="post">
+                            {% csrf_token %}
+                            <label>Name</label>
+                            <input type="text" name="name" class="form-control mb-4" value="{{obj.0.name}}">
+                            <label>Duration (months)</label>
+                            <input type="number" name="duration_in_months" class="form-control mb-4" value="{{obj.0.duration_in_months}}">
+                            <label>Cost</label>
+                            <input type="number" name="cost" class="form-control mb-4" value="{{obj.0.cost}}">
+                            <div style="display:none;"><input type="text" id="id_{{form.submit.name}}" name="{{form.submit.name}}" class="form-control mb-4" value="{{form.submit.value}}"></div>
+                            <button name="create" class="btn btn-warning btn-block my-4" type="submit">Submit</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <div class="card-header">
+                <h4 class="card-title"> {{client}}</h4>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead class=" text-primary">
+                      <th>
+                        SN
+                      </th>
+                      <th>
+                        Name
+                      </th>
+                      <th>
+                        Duration
+                      </th>
+                      <th class="text-right">
+                        Cost
+                      </th>
+                      <th>
+                        Requirements
+                      </th>
+
+                    </thead>
+                    <tbody>
+                    {% for obj in object_list %}
+                      <tr>
+                        <td>
+                          {{forloop.counter}}
+                        </td>
+                        <td>
+                          {{obj.0.name}}
+                        </td>
+                        <td>
+                          {{obj.0.duration_in_months}} month(s)
+                        </td>
+                        <td class="text-right">
+                          &#x20A6;{{obj.0.cost}}
+                        </td>
+                        <td>
+                          {% if obj.1 %}
+                          {% for req in obj.1 %}
+
+                          {{req}}
+                            <button style="padding:2px;" title="delete course" type="button" class="btn btn-danger rounded-circle" data-toggle="modal" data-target="#delreq{{req.id}}">
+                              <i class="fa fa-times fa-lg"></i>
+                            </button>
+                            <div class="modal fade" id="delreq{{req.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                              <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Delete Course Requirement for {{req.main.name}}</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                        <form class="text-center border border-light p-5" method="post">
+                                        {% csrf_token %}
+                                        <h4>Are you sure you want to delete course requirement {{req.requirement.name}}</h4>
+                                        <div style="display:none;"><input type="number" name="requirement_id" class="form-control mb-4" value="{{req.id}}"></div>
+                                        <div style="display:none;"><input type="text" id="id_{{form.submit.name}}" name="{{form.submit.name}}" class="form-control mb-4" value="{{form.submit.value}}"></div>
+                                        <button name="delreq" class="btn btn-danger btn-block my-4" type="submit">Yes</button>
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                          <br>{% endfor %}
+                          {% else %}
+                          None
+                          {% endif %}
+                        </td>
+                        <td>
+
+                        <button title="add requirement" type="button" class="btn btn-primary" data-toggle="modal" data-target="#addreq{{obj.0.id}}">
+                          <i class="fa fa-plus fa-lg"></i>
+                        </button>
+                        <div class="modal fade" id="addreq{{obj.0.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">select requirement for Course {{obj.0.name}}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                    <form class="text-center border border-light p-5" method="post">
+                                    {% csrf_token %}
+                                    <label>Requirement</label>
+                                    <select name="requirement_id" class="form-control mb-4">
+                                        {% for course in courses %}
+                                          <option value="{{course.id}}">{{course}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <label>Order</label>
+                                    <input type="number" name="order" class="form-control mb-4">
+                                    <div style="display:none;"><input type="number" name="course_id" class="form-control mb-4" value="{{obj.0.id}}"></div>
+                                    <div style="display:none;"><input type="text" id="id_{{form.submit.name}}" name="{{form.submit.name}}" class="form-control mb-4" value="{{form.submit.value}}"></div>
+                                    <button name="addreq" class="btn btn-primary btn-block my-4" type="submit">Yes</button>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <button title="update course data" type="button" class="btn btn-warning" data-toggle="modal" data-target="#update{{obj.0.id}}">
+                          <i class="fa fa-pencil fa-lg"></i>
+                        </button>
+                        <div class="modal fade" id="update{{obj.0.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Update Course</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                    <form class="text-center border border-light p-5" method="post">
+                                    {% csrf_token %}
+                                    <label>Name</label>
+                                    <input type="text" name="name" class="form-control mb-4" value="{{obj.0.name}}">
+                                    <label>Duration (months)</label>
+                                    <input type="number" name="duration_in_months" class="form-control mb-4" value="{{obj.0.duration_in_months}}">
+                                    <label>Cost</label>
+                                    <input type="number" name="cost" class="form-control mb-4" value="{{obj.0.cost}}">
+                                    <div style="display:none;"><input type="number" name="course_id" class="form-control mb-4" value="{{obj.0.id}}"></div>
+                                    <div style="display:none;"><input type="text" id="id_{{form.submit.name}}" name="{{form.submit.name}}" class="form-control mb-4" value="{{form.submit.value}}"></div>
+                                    <button name="update" class="btn btn-warning btn-block my-4" type="submit">Submit</button>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <button title="delete course" type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete{{obj.0.id}}">
+                          <i class="fa fa-trash fa-lg"></i>
+                        </button>
+                        <div class="modal fade" id="delete{{obj.0.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Delete Course</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                    <form class="text-center border border-light p-5" method="post">
+                                    {% csrf_token %}
+                                    <h4>Are you sure you want to delete course {{obj.0.name}}</h4>
+                                    <div style="display:none;"><input type="number" name="course_id" class="form-control mb-4" value="{{obj.0.id}}"></div>
+                                    <div style="display:none;"><input type="text" id="id_{{form.submit.name}}" name="{{form.submit.name}}" class="form-control mb-4" value="{{form.submit.value}}"></div>
+                                    <button name="delete" class="btn btn-danger btn-block my-4" type="submit">Yes</button>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock %}
